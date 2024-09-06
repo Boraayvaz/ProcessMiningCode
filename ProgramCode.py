@@ -125,9 +125,9 @@ def assign_pmid():
 def draw_curved_edges(G, pos, ax, edge_labels=None, edge_colors=None, linewidths=None, arrow_sizes=None):
     for (i, (u, v)) in enumerate(G.edges()):
         if edge_colors[i] == 1:
-            ColorD = [0, 0, 1]
+            ColorD = [0, 0, 0]
         else:
-            ColorD = [1, 0.5, 1]
+            ColorD = [0, 0, 0]
 
         
         rad = 0.1  # Controls the curvature; increase for more curve
@@ -240,13 +240,13 @@ def run_analysis():
     for i in range(len(edges)):
         if edges[i, 1] - edges[i, 0] == 1 or ((edges[i, 1] - edges[i, 0]) == min(Events)-max(Events)):
             linewidths.append(0.5)
-            edge_colors.append([0, 0, 1])  # Dark blue color
+            edge_colors.append([1, 1, 1])  # Dark blue color
             arrow_sizes.append(10)
             ColorCodes.append(1)
         else:
             linewidths.append(0.5)
             arrow_sizes.append(7)
-            edge_colors.append([1, 0.5, 1])  # Light blue color
+            edge_colors.append([1, 1, 1])  # Light blue color
             ColorCodes.append(2) 
 
     ColorCodes_array = np.array(ColorCodes)
@@ -271,8 +271,16 @@ def run_analysis():
     labels = {i: str(i-1) for i in range(1, num_nodes + 1)}
     nx.draw_networkx_labels(G, pos, labels, font_color='w', font_size=6)
 
-    plt.title('Skeleton Graph - Curvy S-Shape with Custom Linewidths and Colors')
+    plt.title('Skeleton Graph - Process Analyze')
     plt.grid(True)
+
+    for widget in plot_frame.winfo_children():
+        widget.destroy()
+
+    # Embed the plot into the Tkinter frame using FigureCanvasTkAgg
+    canvas = FigureCanvasTkAgg(fig, master=plot_frame)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
     # Save the plot as a file
     plot_filename = "skeleton_graph.png"
@@ -449,7 +457,10 @@ def run_analysis():
     messagebox.showinfo("PDF Created", f"PDF file '{pdf_filename}' created successfully.")
 # Create the main window
 root = tk.Tk()
-root.title("Excel File Selector")
+root.title("ProsB - Big Data Architecture Integrated Process Mining Program")
+
+root.state('zoomed')
+
 
 # Create a frame for the buttons
 button_frame = tk.Frame(root)
@@ -495,7 +506,10 @@ run_analysis_button.grid(row=6, column=0, padx=5, pady=5, sticky="w")
 
 # Create a frame for the AnomallyEvents Treeview
 tree_frame = tk.Frame(root)
-tree_frame.grid(row=0, column=1, rowspan=7, padx=5, pady=5, sticky="nsew")
+tree_frame.grid(row=0, column=1, rowspan=7, padx=5, pady=35, sticky="nsew")
+
+tree_frame_title = tk.Label(root, text="Delayed Event Anomalies", font=("Arial", 12, "bold"))
+tree_frame_title.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
 # Add a vertical scrollbar for the AnomallyEvents Treeview
 tree_scrollbar = ttk.Scrollbar(tree_frame, orient="vertical")
@@ -518,6 +532,9 @@ tree_scrollbar.config(command=tree.yview)
 tree_frameFM = tk.Frame(root)
 tree_frameFM.grid(row=7, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
 
+tree_frameFM_title = tk.Label(root, text="Missed Event Anomalies", font=("Arial", 12, "bold"))
+tree_frameFM_title.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky="n")
+
 # Add a vertical scrollbar for the Final Matrix Treeview
 tree_scrollbarFM = ttk.Scrollbar(tree_frameFM, orient="vertical")
 tree_scrollbarFM.pack(side="right", fill="y")
@@ -531,6 +548,9 @@ treeFM.pack(fill=tk.BOTH, expand=True)
 
 # Attach the scrollbar to the Treeview
 tree_scrollbarFM.config(command=treeFM.yview)
+
+plot_frame = tk.Frame(root)
+plot_frame.grid(row=0, column=2, rowspan=8, padx=5, pady=5, sticky="nsew")
 
 # Ensure proper resizing behavior
 root.grid_rowconfigure(7, weight=1)
