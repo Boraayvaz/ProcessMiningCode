@@ -2,7 +2,6 @@ import subprocess
 import sys
 import os
 import shutil
-import ctypes
 
 # List of required libraries
 required_libraries = [
@@ -76,7 +75,7 @@ pause
 
 def create_shortcut_to_desktop(bat_file_path, icon_path):
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')  # Desktop path
-    shortcut_path = os.path.join(desktop, "Run ProsB.lnk")
+    shortcut_path = os.path.join(desktop, "ProsB.lnk")
     
     # Create shortcut using win32com.client
     try:
