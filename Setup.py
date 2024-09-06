@@ -3,12 +3,11 @@ import sys
 import os
 import shutil
 import ctypes
-from PIL import Image  # for converting logo.jpg to logo.ico
 
 # List of required libraries
 required_libraries = [
     'tkinter', 'pandas', 'os', 'numpy', 'matplotlib', 'networkx', 'collections',
-    'datetime', 'reportlab', 'random', 'time', 'threading', 'openpyxl', 'PIL', 'pywin32'
+    'datetime', 'reportlab', 'random', 'time', 'threading', 'openpyxl', 'pywin32'
 ]
 
 def check_python_version():
@@ -75,20 +74,9 @@ pause
         print(f"An error occurred while creating .bat file: {e}")
         return None
 
-def convert_image_to_icon(image_path, icon_path):
-    """Converts a .jpg image to a .ico file."""
-    try:
-        img = Image.open(image_path)
-        img.save(icon_path, format='ICO', sizes=[(64, 64)])
-        print(f"Icon created: {icon_path}")
-        return icon_path
-    except Exception as e:
-        print(f"Failed to convert {image_path} to .ico: {e}")
-        return None
-
 def create_shortcut_to_desktop(bat_file_path, icon_path):
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')  # Desktop path
-    shortcut_path = os.path.join(desktop, "ProsB.lnk")
+    shortcut_path = os.path.join(desktop, "Run ProsB.lnk")
     
     # Create shortcut using win32com.client
     try:
@@ -119,13 +107,13 @@ if __name__ == "__main__":
         bat_file_path = create_bat_file(destination_folder)
 
         if bat_file_path:
-            # 5. Convert logo.jpg to logo.ico
-            logo_jpg_path = os.path.join(destination_folder, "logo.jpg")
-            logo_ico_path = os.path.join(destination_folder, "logo.ico")
-            icon_path = convert_image_to_icon(logo_jpg_path, logo_ico_path)
+            # 5. Use the provided logo.ico for the shortcut
+            icon_path = os.path.join(destination_folder, "logo.ico")
 
-            if icon_path:
+            if os.path.exists(icon_path):
                 # 6. Create a desktop shortcut that points to the .bat file
                 create_shortcut_to_desktop(bat_file_path, icon_path)
+            else:
+                print("logo.ico not found in ProsB folder.")
 
     print("Setup completed successfully.")
