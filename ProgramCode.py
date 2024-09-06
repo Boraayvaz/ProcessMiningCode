@@ -19,7 +19,7 @@ from reportlab.platypus import Image
 
 np.set_printoptions(precision=6, suppress=True)
 # Hardcoded folder path
-folder_path = r'C:\Users\BoraAyvaz\iCloudDrive\BeyzosThesis'
+folder_path = os.path.dirname(os.path.realpath(__file__))
 
 # Initialize variables to store selected headers
 PMmsg = None
